@@ -1,6 +1,7 @@
 const mongoose =  require('mongoose');
 const validator = require('validator')
 const bcrypt = require('bcryptjs')
+const jwt = require('jsonwebtoken')
 
 const userSchema = new mongoose.Schema({
     name: {
@@ -39,9 +40,38 @@ const userSchema = new mongoose.Schema({
                 throw new Error('Age must be greater than 0!')
             }
         }
-    }
+    },
+    tokens: [{
+        token: {
+            type: String,
+            required: true
+        }
+    }]
 })
 
+// to hide the important fields like tokens and password of the user
+userSchema.methods.toJSON = function() {
+    const user = this
+    const userObject = user.toObject()
+
+    delete userObject.tokens
+    delete userObject.password
+
+    return userObject
+}
+
+userSchema.methods.generateAuthToken = async function() {
+    const user = this
+    const token = jwt.sign({ _id: user._id.toString() }, 'thisIsMyFuckingSecretCode')
+    
+    // Save the token of the user
+    user.tokens = user.tokens.concat({ token })
+    await user.save();
+
+    return token
+}
+
+// statics methods accessiable by model
 userSchema.statics.findByCredentials = async (email, password) => {
     const user = await User.findOne({ email })
 
