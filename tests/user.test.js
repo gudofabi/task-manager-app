@@ -1,4 +1,4 @@
-const request = require('supertest')
+const request = require('supertest') // NOTE: supertest use to test request
 const jwt = require('jsonwebtoken')
 const mongoose = require('mongoose')
 const app = require('../src/app')
