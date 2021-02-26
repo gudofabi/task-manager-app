@@ -2,6 +2,8 @@ const jwt = require('jsonwebtoken')
 const mongoose = require('mongoose')
 const User = require('../../src/models/user')
 
+jest.useFakeTimers()
+
 const userOneId = mongoose.Types.ObjectId()
 const userOne = {
     _id: userOneId,

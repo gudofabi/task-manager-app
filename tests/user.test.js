@@ -3,12 +3,12 @@ const app = require('../src/app')
 const User = require('../src/models/user')
 const { userOneId, userOne, setupDatabase } = require('./fixtures/db')
 
-
+jest.useFakeTimers()
 /**
- * INFO: it will delete users and create new one
+ * INFO: it will delete users and create new one before enter on the test
+ * 
  */
 beforeEach(setupDatabase);
-
 
 test('Should signup a new user', async () => {
     const response = await request(app).post('/users').send({
