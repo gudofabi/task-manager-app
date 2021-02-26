@@ -1,24 +1,13 @@
 const request = require('supertest') // NOTE: supertest use to test request
-const jwt = require('jsonwebtoken')
-const mongoose = require('mongoose')
 const app = require('../src/app')
 const User = require('../src/models/user')
+const { userOneId, userOne, setupDatabase } = require('./fixtures/db')
 
-const userOneId = mongoose.Types.ObjectId()
-const userOne = {
-    _id: userOneId,
-    name: 'Mike',
-    email: 'mike@sample.com',
-    password: 's3cr3t!!!',
-    tokens: [{
-       token: jwt.sign({ _id: userOneId }, process.env.JWT_SECRET) 
-    }]
-}
 
-beforeEach(async () => {
-    await User.deleteMany()
-    await new User(userOne).save()
-})
+/**
+ * INFO: it will delete users and create new one
+ */
+beforeEach(setupDatabase);
 
 
 test('Should signup a new user', async () => {
